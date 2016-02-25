@@ -1,0 +1,109 @@
+<?php session_start() ?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+
+	<title>Brian Cama - Web Developer</title>
+
+
+    <!-- Mobile-friendly viewport -->
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Stylesheet link -->
+	<link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700' rel='stylesheet' type='text/css'>
+	<link href="css/main.css" rel="stylesheet" media="all">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+</head>
+
+<body>
+<header role="banner" id="secondary-content">
+	<a href="http://www.briancama.com" class="logo"><img alt="Brian Cama" src="/images/logo.svg"></img></a>
+	<p class="tagline">designs and develops websites</p>
+	<div class="contact"></div>
+	</header>
+<main role="main">
+	<div class="main-container">
+		<nav class="page-nav">
+			<ul class="page-nav-menu">
+				<li class="page-nav-item">
+					<a class="page-nav-link" href="http://www.briancama.com">My Portfolio ></a>
+				</li>
+			</ul>
+		</nav>
+		<div id="contact-container">
+		<div class="top-bg"></div>
+		<div id="contact" class="contact-wrap">
+            <div class="contact-info">
+				<div class="section">
+					<h5 class="title">Email</h5>
+					<a href="mailto:&#098;&#114;&#105;&#097;&#110;&#099;&#097;&#109;&#097;&#064;&#103;&#109;&#097;&#105;&#108;&#046;&#099;&#111;&#109;">briancama@gmail.com</a>
+				</div>
+				<div class="section">
+					<h5 class="title">Phone</h5>
+					<a href="tel:808.443.4596">808.443.4596</a>
+				</div>
+				<div class="section">
+					<h5 class="title">Location</h5>
+					Seattle, Washington
+				</div>
+			</div>
+			<div id="contact-form">
+				<h1>Get In Touch!</h1>
+				<?php
+				//init variables
+				$cf = array();
+				$sr = false;
+				 
+				if(isset($_SESSION['cf_returndata'])){
+					$cf = $_SESSION['cf_returndata'];
+					$sr = true;
+				}
+				?>
+				<span>If you have a question or are looking to work together go ahead and drop me a line. I will respond as soon as I can.</span>
+				<ul id="errors" class="<?php echo ($sr && !$cf['form_ok']) ? 'visible' : ''; ?>">
+					<li id="info">There were some problems with your form submission:</li>
+					<?php 
+					if(isset($cf['errors']) && count($cf['errors']) > 0) :
+						foreach($cf['errors'] as $error) :
+					?>
+					<li><?php echo $error ?></li>
+					<?php
+						endforeach;
+					endif;
+					?>
+				</ul>
+				<p id="success" class="<?php echo ($sr && $cf['form_ok']) ? 'visible' : ''; ?>">Thanks for your message! We will get back to you ASAP!</p>
+				<form method="post" action="process.php">
+					<div class="form-row">
+						<label for="name">Your Name <span class="required">(required)</span></label>
+						<input type="text" id="name" name="name" value="" placeholder="John Doe" required="required" />
+					</div>
+					<div class="form-row">
+						<label for="email">Your Email <span class="required">(required)</span></label>
+						<input type="email" id="email" name="email" value="" placeholder="johndoe@example.com" required="required" />
+					</div>
+					<div class="form-row">
+						<label for="telephone">Subject </label>
+						<input type="tel" id="telephone" name="telephone" value="" />
+					</div>
+					<div class="form-row"> 
+						<label for="message">Message <span class="required">(required)</span></label>
+						<textarea id="message" name="message" placeholder="Your message must be greater than 20 characters" required="required" data-minlength="20"></textarea>
+					</div> 
+					<span id="loading"></span>
+					<input type="submit" value="Send" id="submit-button" />
+				</form>
+			</div>
+		</div>
+		<div class="separator"></div>
+		</div>
+	</div>
+</main>
+<footer>
+	<div class="email">briancama@gmail.com</div>
+	<script src="lib/main.js"></script>
+</footer>
+</body>
+</html>
