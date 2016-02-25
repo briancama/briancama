@@ -15,7 +15,6 @@ var path = require('path'),
     compression = require('compression'),
     serverStatic = require('serve-static'),
     appConstants = require('./seafewd6/app/constants/appConstants'),
-    appConstants2 = require('./seafewd8/app/constants/appConstants');
 
 // github method to get auth token
 var githubOAuth = require('github-oauth')({
@@ -42,7 +41,7 @@ var githubOAuth2 = require('github-oauth')({
   baseURL: 'http://seafewd8.briancama.com',
   loginURI: '/fewd8login',
   callbackURI: '/fewd8callback',
-  scope: appConstants2.GITHUB_API_SCOPE
+  scope: appConstants.GITHUB_API_SCOPE
 });
 
 githubOAuth2.on('error', function(err) {
