@@ -11,9 +11,11 @@ var path = require('path'),
     md = require(__dirname + '/node_modules/reveal-md/node_modules/reveal.js/plugin/markdown/markdown'),
     exec = require('child_process').exec,
     githubUtils = require('./seafewd6/app/utils/githubUtils'),
+    githubUtils2 = require('./seafewd8/app/utils/githubUtils'),
     compression = require('compression'),
     serverStatic = require('serve-static'),
-    appConstants = require('./seafewd6/app/constants/appConstants');
+    appConstants = require('./seafewd6/app/constants/appConstants'),
+    appConstants2 = require('./seafewd8/app/constants/appConstants');
 
 // github method to get auth token
 var githubOAuth = require('github-oauth')({
@@ -34,6 +36,23 @@ githubOAuth.on('token', function(token, serverResponse) {
   githubUtils.login(token.access_token, serverResponse);
 });
 
+var githubOAuth2 = require('github-oauth')({
+  githubClient: '67482b98da5a857ba35b',
+  githubSecret: '4baaab441670698c87574a7bfe5a24f995444417',
+  baseURL: 'http://seafewd8.briancama.com',
+  loginURI: '/fewd8login',
+  callbackURI: '/fewd8callback',
+  scope: appConstants2.GITHUB_API_SCOPE
+});
+
+githubOAuth2.on('error', function(err) {
+  console.error('there was a login error', err);
+});
+
+githubOAuth2.on('token', function(token, serverResponse) {
+  process.stdout.write('TOKEN RECEIVED');
+  githubUtils.login(token.access_token, serverResponse);
+});
 
 
 
@@ -108,24 +127,33 @@ var render = function(res, markdown) {
 // server paths
 var briancama = connect();
 var seafewd = connect();
+var seafewd8 = connect();
 
 // get reveal files from reveal-md module
 ['css', 'js', 'images', 'plugin', 'lib'].forEach(function(dir) {
   seafewd.use('/' + dir, serverStatic(opts.revealBasePath + dir));
+  seafewd8.use('/' + dir, serverStatic(opts.revealBasePath + dir));
 });
 
 briancama.use(serverStatic(__dirname + "/dist"));
 seafewd.use(serverStatic(__dirname + "/seafewd6/dist"));
+seafewd8.use(serverStatic(__dirname + "/seafewd8/dist"));
 
 var app = connect();
 app.use(compression());
 app.use(vhost('seafewd6.briancama.com', seafewd));
+app.use(vhost('seafewd8.briancama.com', seafewd8));
 app.use(vhost('briancama.com', briancama));
-app.use(vhost('www.evblurbs.io', briancama));
 
 http.createServer(function(req, res) {
-  if (req.url.match(/login/)) {
+  if (req.url.match(/fewd8login/)) {
+    return githubOAuth2.login(req, res)
+  }
+  else if (req.url.match(/login/)) {
     return githubOAuth.login(req, res)
+  }
+  else if (req.url.match(/fewd8callback/)) {
+    return githubOAuth2.callback(req, res)
   }
   else if (req.url.match(/callback/)) {
     return githubOAuth.callback(req, res)
