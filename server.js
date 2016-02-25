@@ -14,7 +14,7 @@ var path = require('path'),
     githubUtils2 = require('./seafewd8/app/utils/githubUtils'),
     compression = require('compression'),
     serverStatic = require('serve-static'),
-    appConstants = require('./seafewd6/app/constants/appConstants'),
+    appConstants = require('./seafewd6/app/constants/appConstants');
 
 // github method to get auth token
 var githubOAuth = require('github-oauth')({
