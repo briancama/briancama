@@ -50,7 +50,7 @@ githubOAuth2.on('error', function(err) {
 
 githubOAuth2.on('token', function(token, serverResponse) {
   process.stdout.write('TOKEN RECEIVED');
-  githubUtils.login(token.access_token, serverResponse);
+  githubUtils2.login(token.access_token, serverResponse);
 });
 
 
